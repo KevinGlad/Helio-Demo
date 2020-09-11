@@ -208,7 +208,7 @@ router.delete('/:userName', function (req, res, next) {
 
         const info = {
             query: {
-                fName: userName
+                userName: userName
             },
             collection: req.app.locals.collectionUsers
         }

@@ -27,7 +27,7 @@ const EditUsers = (props) => {
             <h2>Users</h2>
             {
                 users.map( user => {
-                    return <UserCard key={user._id} user={user}></UserCard>
+                    return <UserCard key={user._id} user={user} refresh={refresh}></UserCard>
                 })
             }
         </div>

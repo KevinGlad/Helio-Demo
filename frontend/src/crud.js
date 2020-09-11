@@ -34,8 +34,24 @@ const updateOne = () => {
 }
 
 // Delete One
-const deleteOne = () => {
+const deleteOne = (endpoint) => {
 
+    return fetch(endpoint,{
+        method: "DELETE",
+        "Content-Type": "application/json"
+    })
+    .then(httpResponse => {
+
+        if (!httpResponse.ok) {
+            throw new Error(`Error with DELETE at ${endpoint}`)
+        }
+
+        return httpResponse.json()
+
+    })
+    .catch(err => {
+        throw err
+    })
 }
 
 export {getAll, getOne, updateOne, deleteOne}

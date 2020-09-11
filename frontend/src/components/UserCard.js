@@ -1,8 +1,25 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import {deleteOne} from '../crud'
+import {uriBase, apiVer} from '../config'
 
 const UserCard = (props) => {
+
+    const deleteOnClickHandler = (event) => {
+
+        deleteOne(`${uriBase}/${apiVer}/users/${props.user.userName}`,props.user)
+        .then(result => {
+            props.refresh()
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+        
+
+    }
+
+
     return (
         <div>
             <Card style={{ width: '18rem' }}>
@@ -14,7 +31,7 @@ const UserCard = (props) => {
                         the card's content.
                     </Card.Text>
                     <Button variant="primary">Edit</Button>
-                    <Button variant="primary">Delete</Button>
+                    <Button variant="primary" onClick={deleteOnClickHandler}>Delete</Button>
                 </Card.Body>
             </Card>
         </div>
