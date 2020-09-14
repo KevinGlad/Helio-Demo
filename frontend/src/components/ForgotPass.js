@@ -27,7 +27,8 @@ const ForgotPass = (props) => {
         event.preventDefault()
 
         try {
-            patchOne(`${uriBase}/${apiVer}/users`,{userName,password})
+            patchOne(`${uriBase}/${apiVer}/users/${userName}`,{password})
+            console.log("Patched")
         }
         catch (err) {
             console.log(err.message)

@@ -153,15 +153,7 @@ router.patch('/:userName', function (req, res, next) {
 
         const userName = req.params.userName.toLowerCase()
 
-        let user
-
-        try {
-            user = formatUser(req.body)
-        }
-        catch (err) {
-            // no action needed
-            // if an error is thrown it just means no userName is defined
-        }
+        let user = req.body
 
         const info = {
             query: {

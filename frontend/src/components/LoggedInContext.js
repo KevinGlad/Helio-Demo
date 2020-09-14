@@ -8,34 +8,6 @@ const LoggedInProvider = (props) => {
     let [users, setUsers] = React.useState([])
     let [loggedIn, setLoggedIn] = React.useState(false)
 
-    // toDo
-    // function to update password
-    // if user exists then set new password
-    const updatePass = (username, password) => {
-
-        let rtnValue = false
-
-        let foundUser = users.findIndex(user => user.username === username)
-
-        if (foundUser !== -1) {
-            // is found
-
-            // copy array
-            let tmpUsers = [...users]
-
-            // update password
-            tmpUsers[foundUser].password = password
-
-            // set new state
-            setUsers(tmpUsers)
-
-            rtnValue = true
-        }
-
-        return rtnValue
-
-    }
-
     // function to check user
     const checkUser = (username, password) => {
 
@@ -75,7 +47,7 @@ const LoggedInProvider = (props) => {
     }
 
     return (
-        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, updatePass, checkUser}} >
+        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, checkUser}} >
             {props.children}
         </LoggedInContext.Provider>
     )
