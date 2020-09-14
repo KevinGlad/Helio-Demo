@@ -2,14 +2,14 @@ import React from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import {Link} from 'react-router-dom'
-import {LoggedInConsumer, LoggedInContext} from "./LoggedInContext"
+import {LoggedInConsumer} from "./LoggedInContext"
+import {uriBase, apiVer} from "../config"
+import {patchOne} from "../crud"
 
 const ForgotPass = (props) => {
 
-    let [username, setUserName] = React.useState("")
+    let [userName, setUserName] = React.useState("")
     let [password, setPassword] = React.useState("")
-
-    let {updatePass} = React.useContext(LoggedInContext)
 
     const usernameOnChangeHandler = (event) => {
 
@@ -26,7 +26,12 @@ const ForgotPass = (props) => {
     const submitOnClickHandler = (event) => {
         event.preventDefault()
 
-        updatePass(username,password)
+        try {
+            patchOne(`${uriBase}/${apiVer}/users`,{userName,password})
+        }
+        catch (err) {
+            console.log(err.message)
+        }
     }
 
     return (
@@ -34,7 +39,7 @@ const ForgotPass = (props) => {
             <Form>
                 <Form.Group controlId="forgotPassUserName">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" placeholder="Username" onChange={usernameOnChangeHandler} value={username} />
+                    <Form.Control type="text" placeholder="Username" onChange={usernameOnChangeHandler} value={userName} />
                 </Form.Group>
 
                 <Form.Group controlId="forgotPassPassword">

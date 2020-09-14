@@ -2,16 +2,16 @@ import React from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Link } from 'react-router-dom'
-import {LoggedInConsumer, LoggedInContext} from "./LoggedInContext"
+import {LoggedInConsumer} from "./LoggedInContext"
+import {uriBase, apiVer} from '../config'
+import {createOne} from '../crud'
 
 const Signup = (props) => {
 
-    let [username, setUserName] = React.useState("")
+    let [userName, setUserName] = React.useState("")
     let [password, setPassword] = React.useState("")
 
-    let {addUser} = React.useContext(LoggedInContext)
-
-    const usernameOnChangeHandler = (event) => {
+    const userNameOnChangeHandler = (event) => {
 
         event.preventDefault()
         setUserName(event.target.value)
@@ -27,7 +27,7 @@ const Signup = (props) => {
         event.preventDefault()
 
         try {
-            addUser(username, password)
+            createOne(`${uriBase}/${apiVer}/users` ,{userName, password})
             console.log("added")
         }
         catch (err) {
@@ -41,7 +41,7 @@ const Signup = (props) => {
             <Form>
                 <Form.Group controlId="signUpUserName">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" placeholder="Username" onChange={usernameOnChangeHandler} value={username} />
+                    <Form.Control type="text" placeholder="Username" onChange={userNameOnChangeHandler} value={userName} />
                 </Form.Group>
 
                 <Form.Group controlId="signUpPassword">

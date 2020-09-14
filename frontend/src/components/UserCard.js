@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import {deleteOne} from '../crud'
 import {uriBase, apiVer} from '../config'
+import EditUserModal from './EditUserModal'
 
 const UserCard = (props) => {
 
@@ -30,7 +31,7 @@ const UserCard = (props) => {
                         Some quick example text to build on the card title and make up the bulk of
                         the card's content.
                     </Card.Text>
-                    <Button variant="primary">Edit</Button>
+                    <EditUserModal user={props.user} refresh={props.refresh}></EditUserModal>
                     <Button variant="primary" onClick={deleteOnClickHandler}>Delete</Button>
                 </Card.Body>
             </Card>

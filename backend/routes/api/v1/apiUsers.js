@@ -67,6 +67,7 @@ router.get('/:userName', function (req, res, next) {
 // Insert a new document
 router.post('/', function (req, res, next) {
 
+    console.log(req.body)
     try {
 
         const user = formatUser(req.body)

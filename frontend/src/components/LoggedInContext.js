@@ -74,29 +74,8 @@ const LoggedInProvider = (props) => {
 
     }
 
-
-    // function to add a user
-    const addUser = (username, password) => {
-
-        let rtnValue = false
-
-        // check to see if user exists
-        if (users.findIndex(element => username === element.username) === -1) {
-
-            // not found
-            let tmpUsers = [...users]
-            tmpUsers.push({ username, password })
-            setUsers(tmpUsers)
-            rtnValue = true
-        } else {
-            throw new Error("User Already Exists")
-        }
-
-        return rtnValue
-    }
-
     return (
-        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, updatePass, checkUser, addUser }} >
+        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, updatePass, checkUser}} >
             {props.children}
         </LoggedInContext.Provider>
     )
