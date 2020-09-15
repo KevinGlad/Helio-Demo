@@ -71,7 +71,7 @@ const EditUserModal = (props) => {
                     </Button>
                     <Button variant="primary" onClick={saveOnClickHandler}>
                         Save Changes
-                </Button>
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </React.Fragment>

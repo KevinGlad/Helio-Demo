@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../../database/mongo');
+const bcrypt = require('bcrypt')
 
-function formatUser(user) {
+const bcryptSalt = 8
+
+// makes sure user doc has a userName property
+// forces userName to be lower case.
+async function formatUser(user) {
 
     let rtnValue = null
     // check for userName property
@@ -12,8 +17,24 @@ function formatUser(user) {
 
     } else {
 
+        // copy user object
         rtnValue = { ...user }
+
+        // force userName to be lower case
         rtnValue.userName = rtnValue.userName.toLowerCase()
+
+        // encrypt password
+        if (user.hasOwnProperty("password")) {
+
+            try {
+                rtnValue.password = await bcrypt.hash(user.password, bcryptSalt)
+                console.log("PASSWORD", user.password)
+            }
+            catch (err) {
+                console.log("BCRYPT", err.message)
+                throw err
+            }
+        }
     }
 
     return rtnValue
@@ -33,7 +54,7 @@ router.get('/', function (req, res, next) {
             res.json(users)
         })
         .catch(err => {
-            res.status(500).send("Unable to Get Document ",err.message)
+            res.status(500).send("Unable to Get Document ", err.message)
         })
 
 }) // end of Get users
@@ -67,48 +88,50 @@ router.get('/:userName', function (req, res, next) {
 // Insert a new document
 router.post('/', function (req, res, next) {
 
-    console.log(req.body)
-    try {
+    formatUser(req.body)
+    
+        .then(user => {
 
-        const user = formatUser(req.body)
-        const info = {
-            doc: user,
-            collection: req.app.locals.collectionUsers
-        }
+            // handle user object
+            console.log("USER", user)
 
-        db.readOne({
-            query: { userName: user.userName },
-            collection: req.app.locals.collectionUsers
+            const info = {
+                doc: user,
+                collection: req.app.locals.collectionUsers
+            }
+
+            db.readOne({
+                query: { userName: user.userName },
+                collection: req.app.locals.collectionUsers
+            })
+                .then(foundUser => {
+
+                    if (foundUser !== null) {
+                        throw new Error(`User ${user.userName} Already Exists`)
+                    }
+
+                    // this shouldn't execute if user is found
+                    return db.createOne(info)
+
+                })
+                .then(resDoc => {
+
+                    if (resDoc.insertedCount === 1) {
+
+                        // ops is an array of all inserted documents
+                        // http://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#~insertOneWriteOpCallback
+                        res.json(resDoc.ops[0])
+                    }
+
+                })
+                .catch(err => {
+                    res.status(500).send(err.message)
+                })
+
+        }, error => {
+            console.log(err.message)
+            res.status(400).send(err.message)
         })
-            .then(foundUser => {
-
-                if (foundUser !== null) {
-                    throw new Error(`User ${user.userName} Already Exists`)
-                }
-
-                // this shouldn't execute if user is found
-                return db.createOne(info)
-
-            })
-            .then(resDoc => {
-
-                if (resDoc.insertedCount === 1) {
-
-                    // ops is an array of all inserted documents
-                    // http://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#~insertOneWriteOpCallback
-                    res.json(resDoc.ops[0])
-                }
-
-            })
-            .catch(err => {
-                res.status(500).send(err.message)
-            })
-
-    } catch (err) {
-
-        res.status(400).send(err.message)
-
-    }
 
 })
 
@@ -178,7 +201,7 @@ router.patch('/:userName', function (req, res, next) {
                 })
 
             })
-            .then( resDoc => {
+            .then(resDoc => {
                 res.json(resDoc)
             })
             .catch(err => {
