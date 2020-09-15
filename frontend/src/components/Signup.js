@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Link } from 'react-router-dom'
-import {LoggedInConsumer} from "./LoggedInContext"
+import {LoggedInConsumer, LoggedInContext} from "./LoggedInContext"
 import {uriBase, apiVer} from '../config'
 import {createOne} from '../crud'
 
@@ -10,6 +10,8 @@ const Signup = (props) => {
 
     let [userName, setUserName] = React.useState("")
     let [password, setPassword] = React.useState("")
+
+    let {token} = useContext(LoggedInContext)
 
     const userNameOnChangeHandler = (event) => {
 
@@ -27,7 +29,7 @@ const Signup = (props) => {
         event.preventDefault()
 
         try {
-            createOne(`${uriBase}/${apiVer}/users` ,{userName, password})
+            createOne(`${uriBase}/${apiVer}/users` , token, {userName, password})
             console.log("added")
         }
         catch (err) {

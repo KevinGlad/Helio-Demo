@@ -7,9 +7,10 @@ const LoggedInProvider = (props) => {
 
     let [users, setUsers] = React.useState([])
     let [loggedIn, setLoggedIn] = React.useState(false)
+    let [token, setToken] = React.useState("")
 
     // function to check user
-    const checkUser = (username, password) => {
+    const checkUser = (userName, password) => {
 
         let rtnValue = false
         // if username and password match return true
@@ -17,8 +18,10 @@ const LoggedInProvider = (props) => {
         fetch(`${uriBase}/${apiVer}/login`,
             {
                 method: "POST",
-                "Content-Type": "application/json",
-                body: JSON.stringify({ username, password })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userName, password })
             })
             .then(httpResponse => {
 
@@ -31,9 +34,14 @@ const LoggedInProvider = (props) => {
             })
             .then(response => {
 
+                console.log(response)
                 if (response.hasOwnProperty('authenticated')) {
 
                     setLoggedIn(response.authenticated)
+
+                    if (response.authenticated === true) {
+                        setToken(response.token)
+                    }
                     rtnValue = response.authenticated
 
                 }
@@ -47,7 +55,7 @@ const LoggedInProvider = (props) => {
     }
 
     return (
-        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, checkUser}} >
+        <LoggedInContext.Provider value={{ users, setUsers, loggedIn, checkUser, token}} >
             {props.children}
         </LoggedInContext.Provider>
     )

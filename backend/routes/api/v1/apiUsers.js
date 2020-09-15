@@ -28,7 +28,6 @@ async function formatUser(user) {
 
             try {
                 rtnValue.password = await bcrypt.hash(user.password, bcryptSalt)
-                console.log("PASSWORD", user.password)
             }
             catch (err) {
                 console.log("BCRYPT", err.message)
@@ -88,13 +87,13 @@ router.get('/:userName', function (req, res, next) {
 // Insert a new document
 router.post('/', function (req, res, next) {
 
+    //const authHeader = req.headers['authorization']
+
     formatUser(req.body)
-    
+
         .then(user => {
 
             // handle user object
-            console.log("USER", user)
-
             const info = {
                 doc: user,
                 collection: req.app.locals.collectionUsers
@@ -128,7 +127,7 @@ router.post('/', function (req, res, next) {
                     res.status(500).send(err.message)
                 })
 
-        }, error => {
+        }, err => {
             console.log(err.message)
             res.status(400).send(err.message)
         })

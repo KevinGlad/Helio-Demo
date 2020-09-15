@@ -1,14 +1,15 @@
 // this file handles the api calls to our backend
-// functions require an api endpoint and a doc
+// functions require an api endpoint a token and a doc
 
 // create a record
-const createOne = (endpoint, doc) => {
+const createOne = (endpoint, token, doc) => {
 
     console.log(doc)
     return fetch(endpoint, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(doc)
     })
