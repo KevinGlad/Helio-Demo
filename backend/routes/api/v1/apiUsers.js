@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../../database/mongo');
 const bcrypt = require('bcrypt')
+const {validateJWT} = require('../../../lib/jwt')
 
 const bcryptSalt = 8
 
@@ -85,10 +86,11 @@ router.get('/:userName', function (req, res, next) {
 })  // endo of get a user
 
 // Insert a new document
-router.post('/', function (req, res, next) {
+router.post('/', validateJWT, function (req, res, next) {
 
     //const authHeader = req.headers['authorization']
-
+    console.log(req.jwtPayload)
+    
     formatUser(req.body)
 
         .then(user => {

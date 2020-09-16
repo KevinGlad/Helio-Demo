@@ -6,7 +6,7 @@ let client
 
 function connect(locals) {
 
-    const uri =`mongodb+srv://NormalAccess:${process.env.DB_PASSWORD}@cluster0.hrloc.mongodb.net/demo?retryWrites=true&w=majority`
+    const uri =`mongodb+srv://NormalAccess:${process.env.DB_PASSWORD}@cluster0.hrloc.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`
 
     client = new MongoClient(uri,{useUnifiedTopology: true})
 
